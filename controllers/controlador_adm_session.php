@@ -23,6 +23,7 @@ class controlador_adm_session extends \gamboamartin\controllers\controlador_adm_
      * @param bool $header si header retorna en http
      * @param bool $ws retorna en json
      * @return array
+     * @version 0.2.0
      */
     public function denegado(bool $header, bool $ws = false): array
     {
@@ -37,7 +38,6 @@ class controlador_adm_session extends \gamboamartin\controllers\controlador_adm_
     /**
      * Funcion de controlador donde se ejecutaran los elementos necesarios para poder mostrar el inicio en
      *      session/inicio
-     * @version 1.0.0
      * @param bool $aplica_template Si aplica template buscara el header de la base
      *              No recomendado para vistas ajustadas como esta
      * @param bool $header Si header es true cualquier error se mostrara en el html y cortara la ejecucion del sistema
