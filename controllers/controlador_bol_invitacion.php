@@ -8,7 +8,6 @@
  */
 namespace gamboamartin\boletaje\controllers;
 
-use base\orm\modelo_base;
 use gamboamartin\boletaje\models\bol_invitacion;
 use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
@@ -32,6 +31,19 @@ class controlador_bol_invitacion extends system {
         $this->titulo_lista = 'Invitacion';
 
         $this->link_bol_invitacion_alta_bd = $obj_link->links->bol_invitacion->alta_bd;
+
+
+        $this->keys_row_lista['nombre_completo'] = new stdClass();
+        $this->keys_row_lista['nombre_completo']->campo = 'bol_invitacion_nombre_completo';
+
+        $this->keys_row_lista['n_boletos'] = new stdClass();
+        $this->keys_row_lista['n_boletos']->campo = 'bol_invitacion_n_boletos';
+
+        $this->keys_row_lista['n_boletos_extra'] = new stdClass();
+        $this->keys_row_lista['n_boletos_extra']->campo = 'bol_invitacion_n_boletos_extra';
+
+        $this->keys_row_lista['licenciatura '] = new stdClass();
+        $this->keys_row_lista['licenciatura ']->campo = 'bol_invitacion_licenciatura';
 
 
 
