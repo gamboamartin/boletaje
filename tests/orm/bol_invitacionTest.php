@@ -58,8 +58,7 @@ class bol_invitacionTest extends test {
         }
 
 
-
-        $this->assertIsarray($resultado);
+        $this->assertIsObject($resultado);
         $this->assertNotTrue(errores::$error);
 
         errores::$error = false;
