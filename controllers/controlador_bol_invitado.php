@@ -31,6 +31,4 @@ class controlador_bol_invitado extends system {
     }
 
 
-
-
 }
