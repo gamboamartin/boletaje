@@ -39,5 +39,10 @@ class controlador_bol_invitacion extends system {
         return $r_alta;
     }
 
+    public function ingreso(bool $header, bool $ws = false)
+    {
+
+    }
+
 
 }
