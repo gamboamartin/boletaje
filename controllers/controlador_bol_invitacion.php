@@ -9,6 +9,8 @@
 namespace gamboamartin\boletaje\controllers;
 
 include('vendor/autoload.php');
+
+use config\generales;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -21,6 +23,7 @@ use html\bol_invitacion_html;
 
 use PDO;
 use stdClass;
+use Throwable;
 
 class controlador_bol_invitacion extends system {
 
@@ -146,13 +149,47 @@ class controlador_bol_invitacion extends system {
 
     }
 
-    public function genera_qr(bool $header, bool $ws = false)
+    public function genera_qr(bool $header, bool $ws = false): array|string
     {
-            $data = 'xxx';
-            $qr = QrCode::create($data);
-            $writer = new PngWriter();
-            $writer->write($qr)->saveToFile((new \config\generales())->path_base."archivos/QR.PNG");
-            echo "<H1>" .$data . "<H1>";
+        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $this->registro_id);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion, header: $header,ws:  $ws);
+        }
+
+        $ruta_archivos = $this->path_base.'archivos';
+        if(!file_exists($ruta_archivos)){
+            mkdir($ruta_archivos,0777,true);
+        }
+        if(!file_exists($ruta_archivos)){
+            return $this->retorno_error(mensaje: 'Error no existe '.$ruta_archivos, data: $ruta_archivos, header: $header, ws: $ws);
+        }
+
+        $ruta_archivos_model = $ruta_archivos.'/'.$this->tabla;
+
+        if(!file_exists($ruta_archivos_model)){
+            mkdir($ruta_archivos_model,0777,true);
+        }
+        if(!file_exists($ruta_archivos_model)){
+            return $this->retorno_error(mensaje: 'Error no existe '.$ruta_archivos_model,
+                data: $ruta_archivos_model, header: $header, ws: $ws);
+        }
+        $bol_invitacion_codigo = $bol_invitacion['bol_invitacion_codigo'];
+        $name_file_bol_invitacion = $ruta_archivos_model."/$bol_invitacion_codigo.png";
+
+        $qr = QrCode::create($bol_invitacion_codigo);
+        $writer = new PngWriter();
+        try {
+            $writer->write($qr)->saveToFile($name_file_bol_invitacion);
+        }
+        catch (Throwable $e){
+            return $this->retorno_error(mensaje: 'Error al genera qr '.$ruta_archivos, data: $e, header: $header, ws: $ws);
+        }
+
+        $_SESSION['exito'][]['mensaje'] = 'QR generado del id '.$this->registro_id;
+        header('Location:'."index.php?seccion=bol_invitacion&accion=lista&session_id=$this->session_id");
+
+        return $name_file_bol_invitacion;
+
     }
 
 
