@@ -8,6 +8,10 @@
  */
 namespace gamboamartin\boletaje\controllers;
 
+include('vendor/autoload.php');
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 use gamboamartin\boletaje\models\bol_invitacion;
 use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
@@ -140,6 +144,15 @@ class controlador_bol_invitacion extends system {
     public function ingreso(bool $header, bool $ws = false)
     {
 
+    }
+
+    public function genera_qr(bool $header, bool $ws = false)
+    {
+            $data = 'xxx';
+            $qr = QrCode::create($data);
+            $writer = new PngWriter();
+            $writer->write($qr)->saveToFile((new \config\generales())->path_base."archivos/QR.PNG");
+            echo "<H1>" .$data . "<H1>";
     }
 
 
