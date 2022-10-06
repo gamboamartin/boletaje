@@ -11,6 +11,6 @@
     <td><?php echo $row->bol_invitacion_licenciatura; ?></td>
 
     <!-- End dynamic generated -->
-
+    <td><?php include 'templates/botons/bol_invitacion/link_genera_qr.php';?></td>
     <?php include (new views())->ruta_templates.'listas/action_row.php';?>
 </tr>

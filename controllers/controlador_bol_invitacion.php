@@ -144,6 +144,26 @@ class controlador_bol_invitacion extends system {
         return $r_alta;
     }
 
+    private function asigna_link_row(stdClass $row, string $accion, string $propiedad, string $estilo): array|stdClass
+    {
+        $keys = array('bol_invitacion_id');
+        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $row);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
+        }
+
+        $link = $this->obj_link->link_con_id(accion: $accion,registro_id:  $row->bol_invitacion_id,
+            seccion:  $this->tabla);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al genera link',data:  $link);
+        }
+
+        $row->$propiedad = $link;
+        $row->$estilo = 'info';
+
+        return $row;
+    }
+
     public function ingreso(bool $header, bool $ws = false)
     {
 
@@ -190,6 +210,36 @@ class controlador_bol_invitacion extends system {
 
         return $name_file_bol_invitacion;
 
+    }
+
+    public function lista(bool $header, bool $ws = false): array
+    {
+        $r_lista = parent::lista($header, $ws);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al maquetar datos',data:  $r_lista, header: $header,ws:$ws);
+        }
+
+        $registros = $this->maqueta_registros_lista(registros: $this->registros);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al maquetar registros',data:  $registros, header: $header,ws:$ws);
+        }
+
+        $this->registros = $registros;
+
+        return $r_lista;
+    }
+
+    private function maqueta_registros_lista(array $registros): array
+    {
+        foreach ($registros as $indice=> $row){
+            $row = $this->asigna_link_row(row: $row, accion: "genera_qr",propiedad: "link_genera_qr",
+                estilo: "link_genera_qr_style");
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
+        }
+        return $registros;
     }
 
 

@@ -9,6 +9,7 @@
         <th data-breakpoints="xs sm md"  data-type="html">N Ext</th>
         <th data-breakpoints="xs sm md"  data-type="html">Lic</th>
 
+        <th data-breakpoints="xs md" class="control"  data-type="html">Genera QR</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Modifica</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Elimina</th>
     </tr>
