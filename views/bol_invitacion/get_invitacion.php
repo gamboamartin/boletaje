@@ -12,6 +12,8 @@
                         <?php include (new views())->ruta_templates."mensajes.php"; ?>
 
 
+                        <?php echo $controlador->inputs->resto; ?>
+                        <?php echo $controlador->inputs->n_ingresos; ?>
                         <?php echo $controlador->inputs->nombre_completo; ?>
                         <?php echo $controlador->inputs->licenciatura; ?>
                         <?php echo $controlador->inputs->generacion; ?>
@@ -19,7 +21,7 @@
                         <?php echo $controlador->inputs->plantel; ?>
                         <?php echo $controlador->inputs->n_boletos; ?>
                         <?php echo $controlador->inputs->n_boletos_extra; ?>
-                        <?php echo $controlador->inputs->n_ingresos; ?>
+
                         <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
 
                     </form>

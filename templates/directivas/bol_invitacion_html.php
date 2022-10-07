@@ -284,6 +284,27 @@ class bol_invitacion_html extends html_controler {
         return $div;
     }
 
+    public function input_resto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disable = false): array|string
+    {
+        $valida = $this->directivas->valida_cols(cols: $cols);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
+        }
+
+        $html =$this->directivas->input_text_required(disable: $disable,name: 'resto',place_holder: 'Resto',
+            row_upd: $row_upd, value_vacio: $value_vacio);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input', data: $html);
+        }
+
+        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al integrar div', data: $div);
+        }
+
+        return $div;
+    }
+
     public function select_bol_invitacion_id(int $cols,bool $con_registros,int $id_selected, PDO $link,
                                           bool $disabled = false): array|string
     {
