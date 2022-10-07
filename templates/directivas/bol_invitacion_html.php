@@ -2,8 +2,10 @@
 namespace html;
 
 
+use gamboamartin\boletaje\models\bol_invitacion;
 use gamboamartin\errores\errores;
 use gamboamartin\system\html_controler;
+use PDO;
 use stdClass;
 
 
@@ -259,6 +261,27 @@ class bol_invitacion_html extends html_controler {
         }
 
         return $div;
+    }
+
+    public function select_bol_invitacion_id(int $cols,bool $con_registros,int $id_selected, PDO $link,
+                                          bool $disabled = false): array|string
+    {
+        $valida = (new \gamboamartin\template\directivas(html: $this->html_base))->valida_cols(cols:$cols);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar cols', data: $valida);
+        }
+
+        $modelo = new bol_invitacion($link);
+
+        $extra_params_keys = array();
+
+        $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
+            modelo: $modelo, disabled: $disabled,extra_params_keys: $extra_params_keys, label: "Invitado",
+            required: true);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar select', data: $select);
+        }
+        return $select;
     }
 
 

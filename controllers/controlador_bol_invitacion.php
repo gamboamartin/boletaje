@@ -169,6 +169,14 @@ class controlador_bol_invitacion extends system {
 
     public function ingreso(bool $header, bool $ws = false)
     {
+        $select = (new bol_invitacion_html(html:$this->html_base))->select_bol_invitacion_id(
+            cols: 6, con_registros:true, id_selected:$this->registro_id,link: $this->link);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al generar select',data:  $select);
+        }
+
+        $this->inputs = new stdClass();
+        $this->inputs->select = $select;
 
     }
 
