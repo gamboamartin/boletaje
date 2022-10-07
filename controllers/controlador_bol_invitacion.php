@@ -28,6 +28,7 @@ use Throwable;
 class controlador_bol_invitacion extends system {
 
     public string $link_bol_invitacion_alta_bd;
+    public string $url_qr_code;
     public function __construct(PDO $link,  html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass()){
         $modelo = new bol_invitacion(link: $link);
@@ -249,7 +250,14 @@ class controlador_bol_invitacion extends system {
         return $registros;
     }
 
-    public function ver_qr(){
+    public function ver_qr(bool $header, bool $ws = false){
+        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $this->registro_id, retorno_obj: true);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion, header: $header,ws:  $ws);
+        }
+
+        $this->url_qr_code = (new generales())->url_base."archivos/$this->tabla/$bol_invitacion->bol_invitacion_codigo.png";
+
 
     }
 
