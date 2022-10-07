@@ -11,7 +11,7 @@
                         <?php include (new views())->ruta_templates."head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates."mensajes.php"; ?>
 
-                        <?php echo $controlador->inputs->evento; ?>
+
                         <?php echo $controlador->inputs->nombre; ?>
                         <?php echo $controlador->inputs->ap; ?>
                         <?php echo $controlador->inputs->am; ?>
