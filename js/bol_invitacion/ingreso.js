@@ -25,8 +25,10 @@ docReady(function () {
             ++countResults;
             lastResult = decodedText;
             bol_invitacion_codigo = decodedText;
-            alert(bol_invitacion_codigo);
-            // Handle on success condition with the decoded message.
+            window.location.href = url+'index.php?seccion=bol_invitacion&accion=get_invitacion&bol_invitacion_codigo='+bol_invitacion_codigo+'&session_id='+session_id;
+
+
+                // Handle on success condition with the decoded message.
             //console.log(`Scan result ${decodedText}`, decodedResult);
             //document.write(decodedText);
         }
