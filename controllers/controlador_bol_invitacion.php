@@ -213,6 +213,10 @@ class controlador_bol_invitacion extends system {
 
     }
 
+    public function leer_qr(bool $header, bool $ws = false){
+
+    }
+
     public function lista(bool $header, bool $ws = false): array
     {
         $r_lista = parent::lista($header, $ws);
@@ -257,7 +261,6 @@ class controlador_bol_invitacion extends system {
         }
 
         $this->url_qr_code = (new generales())->url_base."archivos/$this->tabla/$bol_invitacion->bol_invitacion_codigo.png";
-
 
     }
 
