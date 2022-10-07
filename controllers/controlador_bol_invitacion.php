@@ -235,17 +235,15 @@ class controlador_bol_invitacion extends system {
             return $this->retorno_error(mensaje: 'Error al obtener boleto',data:  $r_bol_invitacion, header: $header,ws:  $ws);
         }
 
-       // print_r($r_bol_invitacion);exit;
         $this->row_upd = $r_bol_invitacion->registros_obj[0];
-        /*
-        $r_modifica =  parent::modifica(header: false,aplica_form:  false);
-        if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al generar template',data:  $r_modifica);
-        }*/
 
-       
+        $resto = ($this->row_upd->n_boletos_extra + $this->row_upd->n_boletos) - $this->row_upd->n_ingresos;
+        $this->row_upd->resto = $resto;
 
-        $in_evento = (new bol_invitacion_html($this->html_base))->input_evento(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        $this->registro_id = $this->row_upd->id;
+
+
+        $in_evento = (new bol_invitacion_html($this->html_base))->input_evento(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_evento',data:  $in_evento, header: $header,ws:  $ws);
         }
@@ -271,12 +269,12 @@ class controlador_bol_invitacion extends system {
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_licenciatura = (new bol_invitacion_html($this->html_base))->input_licenciatura(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        $in_licenciatura = (new bol_invitacion_html($this->html_base))->input_licenciatura(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_generacion = (new bol_invitacion_html($this->html_base))->input_generacion(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        $in_generacion = (new bol_invitacion_html($this->html_base))->input_generacion(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
@@ -291,21 +289,26 @@ class controlador_bol_invitacion extends system {
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_plantel = (new bol_invitacion_html($this->html_base))->input_plantel(cols:6, row_upd:$this->row_upd, value_vacio: false);
+        $in_plantel = (new bol_invitacion_html($this->html_base))->input_plantel(cols:6, row_upd:$this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_n_boletos = (new bol_invitacion_html($this->html_base))->input_n_boletos(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        $in_n_boletos = (new bol_invitacion_html($this->html_base))->input_n_boletos(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_n_boletos_extra = (new bol_invitacion_html($this->html_base))->input_n_boletos_extra(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        $in_n_boletos_extra = (new bol_invitacion_html($this->html_base))->input_n_boletos_extra(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
-        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_resto = (new bol_invitacion_html($this->html_base))->input_resto(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
@@ -324,6 +327,7 @@ class controlador_bol_invitacion extends system {
         $this->inputs->nombre_completo = $in_nombre_completo;
         $this->inputs->plantel = $in_plantel;
         $this->inputs->n_ingresos = $in_n_ingresos;
+        $this->inputs->resto = $in_resto;
 
         $link_bol_invitacion_modifica_bd = (new links_menu(registro_id: $this->registro_id))->link_con_id(
             accion:'modifica_bd',registro_id:  $this->registro_id,seccion:  $this->tabla);
@@ -479,6 +483,19 @@ class controlador_bol_invitacion extends system {
         $this->link_bol_invitacion_modifica_bd = $link_bol_invitacion_modifica_bd;
 
         return $r_modifica;
+    }
+
+    public function modifica_bd(bool $header, bool $ws): array|stdClass
+    {
+        if(isset($_POST['resto'])){
+            unset($_POST['resto']);
+        }
+        $r_modifica_bd = parent::modifica_bd($header, $ws); // TODO: Change the autogenerated stub
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al modificar',
+                data:  $r_modifica_bd, header: $header,ws:  $ws);
+        }
+        return $r_modifica_bd;
     }
 
     public function ver_qr(bool $header, bool $ws = false){
