@@ -30,6 +30,7 @@ class controlador_bol_invitacion extends system {
     public string $link_bol_invitacion_alta_bd;
     public string $link_bol_invitacion_modifica_bd;
     public string $url_qr_code;
+    public string $url_qr_js;
     public function __construct(PDO $link,  html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass()){
         $modelo = new bol_invitacion(link: $link);
@@ -164,6 +165,7 @@ class controlador_bol_invitacion extends system {
         $row->$propiedad = $link;
         $row->$estilo = 'info';
 
+
         return $row;
     }
 
@@ -177,6 +179,8 @@ class controlador_bol_invitacion extends system {
 
         $this->inputs = new stdClass();
         $this->inputs->select = $select;
+
+        $this->url_qr_js = (new generales())->url_base."js/qr.js";
 
     }
 

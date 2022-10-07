@@ -274,6 +274,10 @@ class bol_invitacion_html extends html_controler {
         $modelo = new bol_invitacion($link);
 
         $extra_params_keys = array();
+        $extra_params_keys[] = 'bol_invitacion_codigo';
+        $extra_params_keys[] = 'bol_invitacion_n_boletos';
+        $extra_params_keys[] = 'bol_invitacion_n_ingresos';
+        $extra_params_keys[] = 'bol_invitacion_n_boletos_extra';
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
             modelo: $modelo, disabled: $disabled,extra_params_keys: $extra_params_keys, label: "Invitado",
