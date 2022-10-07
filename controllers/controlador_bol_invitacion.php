@@ -227,6 +227,10 @@ class controlador_bol_invitacion extends system {
 
     }
 
+    public function get_invitacion(bool $header, bool $ws = false){
+
+    }
+
     public function leer_qr(bool $header, bool $ws = false){
 
     }
