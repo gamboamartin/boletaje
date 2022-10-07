@@ -238,8 +238,19 @@ class controlador_bol_invitacion extends system {
                 return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
             }
             $registros[$indice] = $row;
+
+            $row = $this->asigna_link_row(row: $row, accion: "ver_qr",propiedad: "link_ver_qr",
+                estilo: "link_ver_qr_style");
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
         }
         return $registros;
+    }
+
+    public function ver_qr(){
+
     }
 
 
