@@ -375,6 +375,13 @@ class controlador_bol_invitacion extends system {
                 return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
             }
             $registros[$indice] = $row;
+
+            $row = $this->asigna_link_row(row: $row, accion: "get_invitacion",propiedad: "link_get_invitacion",
+                estilo: "link_get_invitacion_style");
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
         }
         return $registros;
     }
