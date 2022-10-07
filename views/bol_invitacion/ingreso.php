@@ -1,17 +1,8 @@
-<?php /** @var gamboamartin\boletaje\controllers\controlador_bol_invitacion $controlador */; ?>
-<?php use config\views; ?>
-
-<html>
-<head>
-<body>
-
 <div class="widget-box box-container form-main widget-form-cart">
     <H1>Lector de Codigo QR</H1>
     <div id="qr-reader" style="width:500px"></div>
     <div id="qr-reader-results"></div>
 </div>
-
-</body>
 
 <!--<script src="/js/html5-qrcode.min.js"></script>-->
 <script src="https://unpkg.com/html5-qrcode"></script>
@@ -36,6 +27,7 @@
                 lastResult = decodedText;
                 // Handle on success condition with the decoded message.
                 console.log(`Scan result ${decodedText}`, decodedResult);
+                //document.write(decodedText);
             }
         }
 
@@ -44,5 +36,3 @@
         html5QrcodeScanner.render(onScanSuccess);
     });
 </script>
-</head>
-</html>

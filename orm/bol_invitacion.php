@@ -4,6 +4,7 @@ use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
+use tests\base\controller\base_htmlTest;
 
 class bol_invitacion extends modelo{
     public function __construct(PDO $link){
@@ -15,6 +16,9 @@ class bol_invitacion extends modelo{
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas);
+
+        $this->NAMESPACE = __NAMESPACE__;
+
     }
 
     public function alta_bd(): array|stdClass

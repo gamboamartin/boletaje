@@ -28,6 +28,7 @@ use Throwable;
 class controlador_bol_invitacion extends system {
 
     public string $link_bol_invitacion_alta_bd;
+    public string $link_bol_invitacion_modifica_bd;
     public string $url_qr_code;
     public function __construct(PDO $link,  html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass()){
@@ -39,6 +40,7 @@ class controlador_bol_invitacion extends system {
         $this->titulo_lista = 'Invitacion';
 
         $this->link_bol_invitacion_alta_bd = $obj_link->links->bol_invitacion->alta_bd;
+        $this->link_bol_invitacion_modifica_bd = $obj_link->links->bol_invitacion->modifica_bd;
 
 
         $this->keys_row_lista['nombre_completo'] = new stdClass();
@@ -252,6 +254,91 @@ class controlador_bol_invitacion extends system {
             $registros[$indice] = $row;
         }
         return $registros;
+    }
+
+    public function modifica(bool $header, bool $ws = false, string $breadcrumbs = '', bool $aplica_form = true, bool $muestra_btn = true): array|string
+    {
+        $r_modifica =  parent::modifica(header: false,aplica_form:  false);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al generar template',data:  $r_modifica);
+        }
+
+        $in_evento = (new bol_invitacion_html($this->html_base))->input_evento(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_evento',data:  $in_evento, header: $header,ws:  $ws);
+        }
+
+        $in_nombre = (new bol_invitacion_html($this->html_base))->input_nombre(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_ap = (new bol_invitacion_html($this->html_base))->input_ap(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_ap',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_am = (new bol_invitacion_html($this->html_base))->input_am(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_nombre_completo = (new bol_invitacion_html($this->html_base))->input_nombre_completo(
+            cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_licenciatura = (new bol_invitacion_html($this->html_base))->input_licenciatura(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_generacion = (new bol_invitacion_html($this->html_base))->input_generacion(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_domicilio = (new bol_invitacion_html($this->html_base))->input_domicilio(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_fecha_hora = (new bol_invitacion_html($this->html_base))->input_fecha_hora(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_plantel = (new bol_invitacion_html($this->html_base))->input_plantel(cols:6, row_upd:$this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_n_boletos = (new bol_invitacion_html($this->html_base))->input_n_boletos(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $in_n_boletos_extra = (new bol_invitacion_html($this->html_base))->input_n_boletos_extra(cols:6, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
+        }
+
+        $this->inputs = new stdClass();
+        $this->inputs->am = $in_am;
+        $this->inputs->ap = $in_ap;
+        $this->inputs->domicilio = $in_domicilio;
+        $this->inputs->evento = $in_evento;
+        $this->inputs->fecha_hora = $in_fecha_hora;
+        $this->inputs->generacion = $in_generacion;
+        $this->inputs->licenciatura = $in_licenciatura;
+        $this->inputs->n_boletos = $in_n_boletos;
+        $this->inputs->n_boletos_extra = $in_n_boletos_extra;
+        $this->inputs->nombre = $in_nombre;
+        $this->inputs->nombre_completo = $in_nombre_completo;
+        $this->inputs->plantel = $in_plantel;
+
+        return $r_modifica;
     }
 
     public function ver_qr(bool $header, bool $ws = false){
