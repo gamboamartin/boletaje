@@ -40,7 +40,7 @@ class controlador_bol_invitacion extends system {
         $this->titulo_lista = 'Invitacion';
 
         $this->link_bol_invitacion_alta_bd = $obj_link->links->bol_invitacion->alta_bd;
-        $this->link_bol_invitacion_modifica_bd = $obj_link->links->bol_invitacion->modifica_bd;
+
 
 
         $this->keys_row_lista['nombre_completo'] = new stdClass();
@@ -337,6 +337,16 @@ class controlador_bol_invitacion extends system {
         $this->inputs->nombre = $in_nombre;
         $this->inputs->nombre_completo = $in_nombre_completo;
         $this->inputs->plantel = $in_plantel;
+
+        $link_bol_invitacion_modifica_bd = (new links_menu(registro_id: $this->registro_id))->link_con_id(
+            accion:'modifica_bd',registro_id:  $this->registro_id,seccion:  $this->tabla);
+
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al generar link',
+                data:  $link_bol_invitacion_modifica_bd, header: $header,ws:  $ws);
+        }
+
+        $this->link_bol_invitacion_modifica_bd = $link_bol_invitacion_modifica_bd;
 
         return $r_modifica;
     }
