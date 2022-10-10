@@ -227,8 +227,16 @@ class controlador_bol_invitacion extends system {
 
     }
 
-    public function get_invitacion(bool $header, bool $ws = false){
-        $filtro['bol_invitacion.codigo'] = $_GET['bol_invitacion_codigo'];
+    public function get_invitacion(bool $header, bool $ws = false): array|stdClass
+    {
+        $filtro = array();
+        if(isset($_GET['bol_invitacion_codigo'])){
+            $filtro['bol_invitacion.codigo'] = $_GET['bol_invitacion_codigo'];
+        }
+        if($this->registro_id > 0){
+            $filtro['bol_invitacion.id'] = $this->registro_id;
+        }
+        
 
         $r_bol_invitacion = (new bol_invitacion($this->link))->filtro_and(columnas_en_bruto: true, filtro: $filtro);
         if(errores::$error){
