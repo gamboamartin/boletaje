@@ -311,7 +311,7 @@ class controlador_bol_invitacion extends system {
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
-        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
