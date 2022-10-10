@@ -250,6 +250,10 @@ class controlador_bol_invitacion extends system {
 
         $this->registro_id = $this->row_upd->id;
 
+        $in_por_ingresar = (new bol_invitacion_html($this->html_base))->input_por_ingresar(cols:12, row_upd: $this->row_upd, value_vacio: false);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al crear in_evento',data:  $in_por_ingresar, header: $header,ws:  $ws);
+        }
 
         $in_evento = (new bol_invitacion_html($this->html_base))->input_evento(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
@@ -311,12 +315,12 @@ class controlador_bol_invitacion extends system {
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
-        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
+        $in_n_ingresos = (new bol_invitacion_html($this->html_base))->input_n_ingresos(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
 
-        $in_resto = (new bol_invitacion_html($this->html_base))->input_resto(cols:12, row_upd: $this->row_upd, value_vacio: false, disable: true);
+        $in_resto = (new bol_invitacion_html($this->html_base))->input_resto(cols:6, row_upd: $this->row_upd, value_vacio: false, disable: true);
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear in_nombre',data:  $in_nombre, header: $header,ws:  $ws);
         }
@@ -336,6 +340,7 @@ class controlador_bol_invitacion extends system {
         $this->inputs->plantel = $in_plantel;
         $this->inputs->n_ingresos = $in_n_ingresos;
         $this->inputs->resto = $in_resto;
+        $this->inputs->por_ingresar = $in_por_ingresar;
 
         $link_bol_invitacion_modifica_bd = (new links_menu(registro_id: $this->registro_id))->link_con_id(
             accion:'modifica_bd',registro_id:  $this->registro_id,seccion:  $this->tabla);

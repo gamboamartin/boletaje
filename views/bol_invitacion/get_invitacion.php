@@ -12,6 +12,7 @@
                         <?php include (new views())->ruta_templates."mensajes.php"; ?>
 
 
+                        <?php echo $controlador->inputs->por_ingresar; ?>
                         <?php echo $controlador->inputs->resto; ?>
                         <?php echo $controlador->inputs->n_ingresos; ?>
                         <?php echo $controlador->inputs->nombre_completo; ?>
