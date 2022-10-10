@@ -236,7 +236,7 @@ class controlador_bol_invitacion extends system {
         if($this->registro_id > 0){
             $filtro['bol_invitacion.id'] = $this->registro_id;
         }
-        
+
 
         $r_bol_invitacion = (new bol_invitacion($this->link))->filtro_and(columnas_en_bruto: true, filtro: $filtro);
         if(errores::$error){
