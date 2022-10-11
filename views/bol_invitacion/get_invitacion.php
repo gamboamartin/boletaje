@@ -24,7 +24,11 @@
                         <?php echo $controlador->inputs->n_boletos_extra; ?>
 
                         <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
-
+                        <div class="control-group btn-modifica">
+                            <div class="controls">
+                                <a href="index.php?seccion=bol_invitacion&accion=ingreso&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info ">Lector QR</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
 
