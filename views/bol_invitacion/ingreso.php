@@ -10,6 +10,11 @@
         width:66vh;
         border: 0px; !important;
     }
+    @media only screen and (max-width: 1101px) {
+        .qr_div{
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="widget-box box-container form-main widget-form-cart text_align">
