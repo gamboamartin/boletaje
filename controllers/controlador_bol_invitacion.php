@@ -248,6 +248,14 @@ class controlador_bol_invitacion extends system {
         $resto = ($this->row_upd->n_boletos_extra + $this->row_upd->n_boletos) - $this->row_upd->n_ingresos;
         $this->row_upd->resto = $resto;
 
+        $por_ingresar = $resto;
+        if($resto<0){
+            $por_ingresar = 0;
+        }
+
+        $this->row_upd->por_ingresar = $por_ingresar;
+
+
         $this->registro_id = $this->row_upd->id;
 
         $in_por_ingresar = (new bol_invitacion_html($this->html_base))->input_por_ingresar(cols:12, row_upd: $this->row_upd, value_vacio: false);
