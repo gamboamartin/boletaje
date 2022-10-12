@@ -169,6 +169,37 @@ class controlador_bol_invitacion extends system {
         return $row;
     }
 
+    private function crea_qr(string $data, string $ruta_qr): array|string
+    {
+        $qr = QrCode::create($data);
+
+        $writer = new PngWriter();
+        try {
+            $writer->write($qr)->saveToFile($ruta_qr);
+        }
+        catch (Throwable $e){
+            return $this->errores->error(mensaje: 'Error al genera qr '.$ruta_qr, data: $e);
+        }
+        return $ruta_qr;
+    }
+
+    private function ejecuta_qr_crea(array $bol_invitacion): array|string
+    {
+        $name_file_bol_invitacion = $this->genera_name_file_invitacion(bol_invitacion: $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener name_file_bol_invitacion',data:  $name_file_bol_invitacion);
+        }
+
+        $bol_invitacion_codigo = $bol_invitacion['bol_invitacion_codigo'];
+
+
+        $qr = $this->crea_qr(data: $bol_invitacion_codigo, ruta_qr: $name_file_bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al crear qr',data:  $qr);
+        }
+        return $qr;
+    }
+
     public function ingreso(bool $header, bool $ws = false)
     {
         $select = (new bol_invitacion_html(html:$this->html_base))->select_bol_invitacion_id(
@@ -186,45 +217,45 @@ class controlador_bol_invitacion extends system {
 
     public function genera_qr(bool $header, bool $ws = false): array|string
     {
-        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $this->registro_id);
+        $qr = $this->inserta_qr(bol_invitacion_id: $this->registro_id);
         if(errores::$error){
-            return $this->retorno_error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion, header: $header,ws:  $ws);
-        }
-
-        $ruta_archivos = $this->path_base.'archivos';
-        if(!file_exists($ruta_archivos)){
-            mkdir($ruta_archivos,0777,true);
-        }
-        if(!file_exists($ruta_archivos)){
-            return $this->retorno_error(mensaje: 'Error no existe '.$ruta_archivos, data: $ruta_archivos, header: $header, ws: $ws);
-        }
-
-        $ruta_archivos_model = $ruta_archivos.'/'.$this->tabla;
-
-        if(!file_exists($ruta_archivos_model)){
-            mkdir($ruta_archivos_model,0777,true);
-        }
-        if(!file_exists($ruta_archivos_model)){
-            return $this->retorno_error(mensaje: 'Error no existe '.$ruta_archivos_model,
-                data: $ruta_archivos_model, header: $header, ws: $ws);
-        }
-        $bol_invitacion_codigo = $bol_invitacion['bol_invitacion_codigo'];
-        $name_file_bol_invitacion = $ruta_archivos_model."/$bol_invitacion_codigo.png";
-
-        $qr = QrCode::create($bol_invitacion_codigo);
-        $writer = new PngWriter();
-        try {
-            $writer->write($qr)->saveToFile($name_file_bol_invitacion);
-        }
-        catch (Throwable $e){
-            return $this->retorno_error(mensaje: 'Error al genera qr '.$ruta_archivos, data: $e, header: $header, ws: $ws);
+            return $this->retorno_error(mensaje: 'Error al crear qr',data:  $qr, header: $header,ws:  $ws);
         }
 
         $_SESSION['exito'][]['mensaje'] = 'QR generado del id '.$this->registro_id;
         header('Location:'."index.php?seccion=bol_invitacion&accion=lista&session_id=$this->session_id");
 
-        return $name_file_bol_invitacion;
+        return $qr;
 
+    }
+
+    private function genera_name_file_invitacion(array $bol_invitacion): array|string
+    {
+    $ruta_archivos_model = $this->genera_ruta_archivos_model();
+    if(errores::$error){
+        return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $ruta_archivos_model);
+    }
+
+    $name_file_bol_invitacion = $this->name_file_inv(bol_invitacion: $bol_invitacion,ruta_archivos_model:  $ruta_archivos_model);
+    if(errores::$error){
+        return $this->errores->error(mensaje: 'Error al obtener name_file_bol_invitacion',data:  $name_file_bol_invitacion);
+    }
+    return $name_file_bol_invitacion;
+}
+
+    private function genera_ruta_archivos_model(): array|string
+    {
+        $ruta_archivos = $this->ruta_archivos();
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta archivos',data:  $ruta_archivos);
+        }
+
+        $ruta_archivos_model = $this->ruta_archivos_model(ruta_archivos: $ruta_archivos);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $ruta_archivos_model);
+        }
+
+        return $ruta_archivos_model;
     }
 
     public function get_invitacion(bool $header, bool $ws = false): array|stdClass
@@ -361,6 +392,21 @@ class controlador_bol_invitacion extends system {
         $this->link_bol_invitacion_modifica_bd = $link_bol_invitacion_modifica_bd;
 
         return $r_bol_invitacion;
+    }
+
+    private function inserta_qr(int $bol_invitacion_id): array|string
+    {
+        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $bol_invitacion_id);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion);
+        }
+
+
+        $qr = $this->ejecuta_qr_crea(bol_invitacion: $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al crear qr',data:  $qr);
+        }
+        return $qr;
     }
 
     public function leer_qr(bool $header, bool $ws = false){
@@ -517,6 +563,38 @@ class controlador_bol_invitacion extends system {
                 data:  $r_modifica_bd, header: $header,ws:  $ws);
         }
         return $r_modifica_bd;
+    }
+
+    private function name_file_inv(array $bol_invitacion, string $ruta_archivos_model): string
+    {
+        $bol_invitacion_codigo = $bol_invitacion['bol_invitacion_codigo'];
+
+        return $ruta_archivos_model."/$bol_invitacion_codigo.png";
+    }
+
+    private function ruta_archivos(): array|string
+    {
+        $ruta_archivos = $this->path_base.'archivos';
+        if(!file_exists($ruta_archivos)){
+            mkdir($ruta_archivos,0777,true);
+        }
+        if(!file_exists($ruta_archivos)){
+            return $this->errores->error(mensaje: 'Error no existe '.$ruta_archivos, data: $ruta_archivos);
+        }
+        return $ruta_archivos;
+    }
+
+    private function ruta_archivos_model(string $ruta_archivos): array|string
+    {
+        $ruta_archivos_model = $ruta_archivos.'/'.$this->tabla;
+
+        if(!file_exists($ruta_archivos_model)){
+            mkdir($ruta_archivos_model,0777,true);
+        }
+        if(!file_exists($ruta_archivos_model)){
+            return $this->errores->error(mensaje: 'Error no existe '.$ruta_archivos_model, data: $ruta_archivos_model);
+        }
+        return $ruta_archivos_model;
     }
 
     public function ver_qr(bool $header, bool $ws = false){
