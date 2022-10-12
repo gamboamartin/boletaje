@@ -37,6 +37,13 @@ docReady(function () {
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "qr-reader", { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
+
+    bol_invitacion_id_sl.change(function() {
+        let codigo = bol_invitacion_id_sl.value;
+        alert(codigo);
+        window.location.href = url+'index.php?seccion=bol_invitacion&accion=get_invitacion&bol_invitacion_codigo='+codigo+'&session_id='+session_id;
+    });
+
 });
 
 
