@@ -11,6 +11,15 @@
                         <?php include (new views())->ruta_templates."head/subtitulo.php"; ?>
                         <?php include (new views())->ruta_templates."mensajes.php"; ?>
 
+                        <div style="display: inline-block">
+                        <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>
+                        </div>
+
+                        <div class="control-group btn-modifica" style="display: inline-block;">
+                            <div class="controls">
+                                <a href="index.php?seccion=bol_invitacion&accion=ingreso&session_id=<?php echo $controlador->session_id; ?>" class="btn btn-info ">Lector QR</a>
+                            </div>
+                        </div>
 
                         <?php echo $controlador->inputs->por_ingresar; ?>
                         <?php echo $controlador->inputs->resto; ?>
