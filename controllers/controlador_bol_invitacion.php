@@ -229,6 +229,23 @@ class controlador_bol_invitacion extends system {
 
     }
 
+    public function genera_qrs(bool $header, bool $ws = false){
+        $bol_invitaciones = (new bol_invitacion($this->link))->registros();
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al obtener qr',data:  $bol_invitaciones, header: $header,ws:  $ws);
+        }
+        foreach ($bol_invitaciones as $bol_invitacion){
+            $qr = $this->inserta_qr(bol_invitacion_id: $bol_invitacion['bol_invitacion_id']);
+            if(errores::$error){
+                return $this->retorno_error(mensaje: 'Error al crear qr',data:  $qr, header: $header,ws:  $ws);
+            }
+            print_r($qr);
+            echo '<br>';
+        }
+        exit;
+
+    }
+
     private function genera_name_file_invitacion(array $bol_invitacion): array|string
     {
     $ruta_archivos_model = $this->genera_ruta_archivos_model();
