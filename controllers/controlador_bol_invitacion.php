@@ -821,9 +821,9 @@ class controlador_bol_invitacion extends system {
         $bol_invitacion_licenciatura = strtoupper($bol_invitacion_licenciatura);
         $bol_invitacion_licenciatura = str_replace('ñ', 'Ñ', $bol_invitacion_licenciatura);
 
-        $pdf->SetXY(0,216);
-        $pdf->SetFont(family: 'Times',size:  18);
-        $pdf->Multicell(w: 215, h: 10, txt: utf8_decode($bol_invitacion_licenciatura), align: 'C');
+        $pdf->SetXY(12,216);
+        $pdf->SetFont(family: 'Times',size:  20);
+        $pdf->Multicell(w: 190, h: 10, txt: utf8_decode($bol_invitacion_licenciatura), align: 'C');
 
         $pdf->SetXY(0,235);
         $pdf->SetFont(family: 'Times', style: 'B',size:  23);
