@@ -775,14 +775,14 @@ class controlador_bol_invitacion extends system {
         $pdf->Multicell(w: 215, h: 10, txt: utf8_decode('Licenciatura: '.$bol_invitacion->bol_invitacion_licenciatura), align: 'C');
 
         $pdf->SetXY(0,235);
-        $pdf->SetFont(family: 'Times', style: 'B',size:  25);
+        $pdf->SetFont(family: 'Times', style: 'B',size:  23);
 
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion->bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
 
-        $pdf->Multicell(w: 215, h: 10, txt:utf8_decode($bol_invitacion_nombre_completo), align: 'C');
+        $pdf->Multicell(w: 215, h: 16, txt:utf8_decode($bol_invitacion_nombre_completo), align: 'C');
 
         $tplIdx = $pdf->importPage(1);
         $pdf->useTemplate($tplIdx);
@@ -796,6 +796,7 @@ class controlador_bol_invitacion extends system {
 
 
         $pdf->Output(dest: 'F',name: $file_pdf);
+        //$pdf->Output();
         unlink($doc_tmp_name);
         return $file_pdf;
     }
