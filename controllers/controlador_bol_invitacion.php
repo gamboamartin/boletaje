@@ -26,6 +26,7 @@ use PDO;
 use setasign\Fpdi\Fpdi;
 use stdClass;
 use Throwable;
+use ZipArchive;
 
 
 class controlador_bol_invitacion extends system {
@@ -215,7 +216,7 @@ class controlador_bol_invitacion extends system {
         return $qr;
     }
 
-    private function file_pdf(stdClass $bol_invitacion): array|string
+    private function file_pdf(stdClass $bol_invitacion): array|stdClass
     {
         $ruta_archivos_model_pdfs = $this->genera_ruta_archivos_model_pdfs();
         if(errores::$error){
@@ -227,7 +228,11 @@ class controlador_bol_invitacion extends system {
             return $this->errores->error(mensaje: 'Error al crear name',data:  $name_pdf);
         }
 
-        return $ruta_archivos_model_pdfs.$name_pdf;
+        $data_file = new stdClass();
+        $data_file->path = $ruta_archivos_model_pdfs.$name_pdf;
+        $data_file->name = $name_pdf;
+
+        return $data_file;
     }
 
     public function ingreso(bool $header, bool $ws = false)
@@ -279,15 +284,6 @@ class controlador_bol_invitacion extends system {
     public function genera_pdf(bool $header, bool $ws = false): array|string
     {
 
-        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $this->registro_id,retorno_obj: true);
-        if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion);
-        }
-
-        $name_pdf = $this->name_pdf(bol_invitacion: $bol_invitacion);
-        if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al obtener name_pdf',data:  $name_pdf);
-        }
 
         $pdf = $this->pdf(bol_invitacion_id: $this->registro_id);
         if(errores::$error){
@@ -296,8 +292,8 @@ class controlador_bol_invitacion extends system {
 
         ob_clean();
         header("Content-type:application/pdf");
-        header("Content-Disposition:attachment;filename=$name_pdf");
-        readfile($pdf);
+        header("Content-Disposition:attachment;filename=$pdf->name");
+        readfile($pdf->path);
         exit;
 
 
@@ -310,14 +306,34 @@ class controlador_bol_invitacion extends system {
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al obtener qr',data:  $bol_invitaciones, header: $header,ws:  $ws);
         }
+        $files = array();
         foreach ($bol_invitaciones as $bol_invitacion){
             $pdf = $this->pdf(bol_invitacion_id: $bol_invitacion['bol_invitacion_id']);
             if(errores::$error){
                 return $this->retorno_error(mensaje: 'Error al crear pdf',data:  $pdf, header: $header,ws:  $ws);
             }
-            print_r($pdf);
-            echo '<br>';
+            //print_r($pdf);
+            $files[] = $pdf;
+            //echo '<br>';
         }
+
+
+        $zip_tmp_name = mt_rand(1000000,99999999).'.zip';
+        $zip = new ZipArchive();
+        $zip->open($zip_tmp_name,ZipArchive::CREATE);
+
+
+        foreach ($files as $file) {
+
+            $zip->addFile($file->path, $file->name);
+        }
+        $zip->close();
+        ob_clean();
+        header("Content-type: application/octet-stream");
+        header("Content-disposition: attachment;filename=$zip_tmp_name");
+        readfile($zip_tmp_name);
+        unlink($zip_tmp_name);
+
         exit;
 
 
@@ -735,7 +751,7 @@ class controlador_bol_invitacion extends system {
         return str_replace('/', '-', $name);
     }
 
-    private function pdf(int $bol_invitacion_id): array|string
+    private function pdf(int $bol_invitacion_id): array|stdClass
     {
         $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $bol_invitacion_id,retorno_obj: true);
         if(errores::$error){
@@ -793,9 +809,7 @@ class controlador_bol_invitacion extends system {
             return $this->errores->error(mensaje: 'Error al obtener ruta',data:  $file_pdf);
         }
 
-
-
-        $pdf->Output(dest: 'F',name: $file_pdf);
+        $pdf->Output(dest: 'F',name: $file_pdf->path);
         //$pdf->Output();
         unlink($doc_tmp_name);
         return $file_pdf;
