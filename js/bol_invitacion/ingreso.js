@@ -1,4 +1,4 @@
-let url = getAbsolutePath();
+
 
 let session_id = getParameterByName('session_id');
 
@@ -20,6 +20,7 @@ function docReady(fn) {
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
     var lastResult, countResults = 0;
+    var url = getAbsolutePath();
     function onScanSuccess(decodedText, decodedResult) {
         if (decodedText !== lastResult) {
             ++countResults;
