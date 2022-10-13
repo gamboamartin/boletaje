@@ -14,5 +14,6 @@
     <td><?php include 'templates/botons/bol_invitacion/link_get_invitacion.php';?></td>
     <td><?php include 'templates/botons/bol_invitacion/link_ver_qr.php';?></td>
     <td><?php include 'templates/botons/bol_invitacion/link_genera_qr.php';?></td>
+    <td><?php include 'templates/botons/bol_invitacion/link_genera_pdf.php';?></td>
     <?php include (new views())->ruta_templates.'listas/action_row.php';?>
 </tr>

@@ -11,6 +11,7 @@ namespace gamboamartin\boletaje\controllers;
 include('vendor/autoload.php');
 
 use config\generales;
+use Dompdf\Dompdf;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
@@ -22,8 +23,10 @@ use gamboamartin\template\html;
 use html\bol_invitacion_html;
 
 use PDO;
+use setasign\Fpdi\Fpdi;
 use stdClass;
 use Throwable;
+
 
 class controlador_bol_invitacion extends system {
 
@@ -66,6 +69,7 @@ class controlador_bol_invitacion extends system {
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al crear template',data:  $r_alta, header: $header,ws:  $ws);
         }
+
 
         $in_evento = (new bol_invitacion_html($this->html_base))->input_evento(cols:12, row_upd: new stdClass(), value_vacio: false);
         if(errores::$error){
@@ -169,6 +173,17 @@ class controlador_bol_invitacion extends system {
         return $row;
     }
 
+    private function carga_dom_pdf(): string
+    {
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml('');
+        $dompdf->setPaper('letter');
+        $dompdf->render();
+        $doc_tmp_name = mt_rand(1000000000,9999999999).'.pdf';
+        file_put_contents($doc_tmp_name, $dompdf->output());
+        return $doc_tmp_name;
+    }
+
     private function crea_qr(string $data, string $ruta_qr): array|string
     {
         $qr = QrCode::create($data);
@@ -198,6 +213,21 @@ class controlador_bol_invitacion extends system {
             return $this->errores->error(mensaje: 'Error al crear qr',data:  $qr);
         }
         return $qr;
+    }
+
+    private function file_pdf(stdClass $bol_invitacion): array|string
+    {
+        $ruta_archivos_model_pdfs = $this->genera_ruta_archivos_model_pdfs();
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al crear ruta',data:  $ruta_archivos_model_pdfs);
+        }
+
+        $name_pdf = $this->name_pdf(bol_invitacion: $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al crear name',data:  $name_pdf);
+        }
+
+        return $ruta_archivos_model_pdfs.$name_pdf;
     }
 
     public function ingreso(bool $header, bool $ws = false)
@@ -246,19 +276,49 @@ class controlador_bol_invitacion extends system {
 
     }
 
-    private function genera_name_file_invitacion(array $bol_invitacion): array|string
+    public function genera_pdf(bool $header, bool $ws = false): array|string
     {
-    $ruta_archivos_model = $this->genera_ruta_archivos_model();
-    if(errores::$error){
-        return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $ruta_archivos_model);
+
+        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $this->registro_id,retorno_obj: true);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion);
+        }
+
+        $name_pdf = $this->name_pdf(bol_invitacion: $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener name_pdf',data:  $name_pdf);
+        }
+
+        $pdf = $this->pdf(bol_invitacion_id: $this->registro_id);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al obtener boleto',data:  $pdf, header: $header,ws:  $ws);
+        }
+
+        ob_clean();
+        header("Content-type:application/pdf");
+        header("Content-Disposition:attachment;filename=$name_pdf");
+        readfile($pdf);
+        exit;
+
+
     }
 
-    $name_file_bol_invitacion = $this->name_file_inv(bol_invitacion: $bol_invitacion,ruta_archivos_model:  $ruta_archivos_model);
-    if(errores::$error){
-        return $this->errores->error(mensaje: 'Error al obtener name_file_bol_invitacion',data:  $name_file_bol_invitacion);
+    private function genera_name_file_invitacion(array|stdClass $bol_invitacion): array|string
+    {
+        if(is_object($bol_invitacion)){
+            $bol_invitacion = (array)$bol_invitacion;
+        }
+        $ruta_archivos_model = $this->genera_ruta_archivos_model();
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $ruta_archivos_model);
+        }
+
+        $name_file_bol_invitacion = $this->name_file_inv(bol_invitacion: $bol_invitacion,ruta_archivos_model:  $ruta_archivos_model);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener name_file_bol_invitacion',data:  $name_file_bol_invitacion);
+        }
+        return $name_file_bol_invitacion;
     }
-    return $name_file_bol_invitacion;
-}
 
     private function genera_ruta_archivos_model(): array|string
     {
@@ -273,6 +333,42 @@ class controlador_bol_invitacion extends system {
         }
 
         return $ruta_archivos_model;
+    }
+
+    private function genera_ruta_archivos_model_pdfs(): array|string
+    {
+        $ruta_archivos = $this->ruta_archivos();
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta archivos',data:  $ruta_archivos);
+        }
+
+        $ruta_archivos_model = $this->ruta_archivos_model(ruta_archivos: $ruta_archivos);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $ruta_archivos_model);
+        }
+
+        $ruta_archivos_model_pdfs = $ruta_archivos_model.'/pdfs/';
+
+        if(!file_exists($ruta_archivos_model_pdfs)){
+            mkdir($ruta_archivos_model_pdfs,0777,true);
+        }
+        if(!file_exists($ruta_archivos_model)){
+            return $this->errores->error(mensaje: 'Error no existe '.$ruta_archivos_model_pdfs, data: $ruta_archivos_model_pdfs);
+        }
+        return $ruta_archivos_model_pdfs;
+
+
+
+    }
+
+    private function generacion(Fpdi $pdf, stdClass $bol_invitacion): Fpdi
+    {
+        $pdf->SetFont('Times','B', 29);
+
+        $pdf->SetXY(0,43);
+        $pdf->Multicell(w:215, h: 16,txt:  utf8_decode('Generación '.$bol_invitacion->bol_invitacion_generacion),align: 'C',  fill: true);
+        return $pdf;
+
     }
 
     public function get_invitacion(bool $header, bool $ws = false): array|stdClass
@@ -411,6 +507,22 @@ class controlador_bol_invitacion extends system {
         return $r_bol_invitacion;
     }
 
+    private function init_pdf(string $doc_tmp_name): Fpdi
+    {
+        $pdf_file = $this->path_base.'plantillas/boleto.pdf';
+        $pdf = new Fpdi();
+
+        $pdf->AddPage('P', 'Letter');
+        $pdf->setSourceFile($pdf_file);
+        $tplIdx = $pdf->importPage(1);
+        $pdf->useTemplate($tplIdx);
+        $pdf->setSourceFile($doc_tmp_name);
+        $pdf->SetFillColor(255,255,255);
+        $pdf->SetTextColor(37,52,109);
+
+        return $pdf;
+    }
+
     private function inserta_qr(int $bol_invitacion_id): array|string
     {
         $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $bol_invitacion_id);
@@ -452,6 +564,13 @@ class controlador_bol_invitacion extends system {
         foreach ($registros as $indice=> $row){
             $row = $this->asigna_link_row(row: $row, accion: "genera_qr",propiedad: "link_genera_qr",
                 estilo: "link_genera_qr_style");
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
+
+            $row = $this->asigna_link_row(row: $row, accion: "genera_pdf",propiedad: "link_genera_pdf",
+                estilo: "link_genera_pdf_style");
             if(errores::$error){
                 return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
             }
@@ -587,6 +706,76 @@ class controlador_bol_invitacion extends system {
         $bol_invitacion_codigo = $bol_invitacion['bol_invitacion_codigo'];
 
         return $ruta_archivos_model."/$bol_invitacion_codigo.png";
+    }
+
+    private function name_pdf(stdClass $bol_invitacion): string
+    {
+        return $bol_invitacion->bol_invitacion_plantel.'.'.
+        $bol_invitacion->bol_invitacion_licenciatura.'.'.$bol_invitacion->bol_invitacion_nombre_completo.'.pdf';
+    }
+
+    private function pdf(int $bol_invitacion_id): array|string
+    {
+        $bol_invitacion = (new bol_invitacion($this->link))->registro(registro_id: $bol_invitacion_id,retorno_obj: true);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion);
+        }
+
+        $file = $this->inserta_qr(bol_invitacion_id:$this->registro_id);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $file);
+        }
+
+
+        $doc_tmp_name = $this->carga_dom_pdf();
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al cargar dom',data:  $doc_tmp_name);
+        }
+
+
+        $pdf = $this->init_pdf(doc_tmp_name: $doc_tmp_name);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al cargar pdf',data:  $pdf);
+        }
+
+        $pdf = $this->generacion(pdf: $pdf,bol_invitacion:  $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al cargar generacion',data:  $pdf);
+        }
+
+        $pdf->Image(file: $file,x: 65,y: 60,w: 83);
+
+        $pdf->SetXY(0,188);
+        $pdf->Multicell(w: 215, h: 16, txt: utf8_decode('Plantel '.$bol_invitacion->bol_invitacion_plantel), align: 'C', fill: true);
+
+
+        $pdf->SetXY(0,216);
+        $pdf->SetFont(family: 'Times',size:  22);
+        $pdf->Multicell(w: 215, h: 10, txt: utf8_decode('Licenciatura: '.$bol_invitacion->bol_invitacion_licenciatura), align: 'C');
+
+        $pdf->SetXY(0,235);
+        $pdf->SetFont(family: 'Times', style: 'B',size:  25);
+
+        $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion->bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
+
+        $pdf->Multicell(w: 215, h: 10, txt:utf8_decode($bol_invitacion_nombre_completo), align: 'C');
+
+        $tplIdx = $pdf->importPage(1);
+        $pdf->useTemplate($tplIdx);
+
+
+        $file_pdf = $this->file_pdf(bol_invitacion: $bol_invitacion);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener ruta',data:  $file_pdf);
+        }
+
+
+        $pdf->Output(dest: 'F',name: $file_pdf);
+        unlink($doc_tmp_name);
+        return $file_pdf;
     }
 
     private function ruta_archivos(): array|string

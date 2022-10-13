@@ -12,6 +12,7 @@
         <th data-breakpoints="xs md" class="control"  data-type="html">Get invitación</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Ver QR</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Genera QR</th>
+        <th data-breakpoints="xs md" class="control"  data-type="html">Genera PDF</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Modifica</th>
         <th data-breakpoints="xs md" class="control"  data-type="html">Elimina</th>
     </tr>
