@@ -303,6 +303,26 @@ class controlador_bol_invitacion extends system {
 
     }
 
+    public function genera_pdfs(bool $header, bool $ws = false): array|string
+    {
+
+        $bol_invitaciones = (new bol_invitacion($this->link))->registros();
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al obtener qr',data:  $bol_invitaciones, header: $header,ws:  $ws);
+        }
+        foreach ($bol_invitaciones as $bol_invitacion){
+            $pdf = $this->pdf(bol_invitacion_id: $bol_invitacion['bol_invitacion_id']);
+            if(errores::$error){
+                return $this->retorno_error(mensaje: 'Error al crear pdf',data:  $pdf, header: $header,ws:  $ws);
+            }
+            print_r($pdf);
+            echo '<br>';
+        }
+        exit;
+
+
+    }
+
     private function genera_name_file_invitacion(array|stdClass $bol_invitacion): array|string
     {
         if(is_object($bol_invitacion)){
@@ -710,8 +730,9 @@ class controlador_bol_invitacion extends system {
 
     private function name_pdf(stdClass $bol_invitacion): string
     {
-        return $bol_invitacion->bol_invitacion_plantel.'.'.
-        $bol_invitacion->bol_invitacion_licenciatura.'.'.$bol_invitacion->bol_invitacion_nombre_completo.'.pdf';
+        $name = $bol_invitacion->bol_invitacion_plantel.'.'.
+            $bol_invitacion->bol_invitacion_licenciatura.'.'.$bol_invitacion->bol_invitacion_nombre_completo.'.pdf';
+        return str_replace('/', '-', $name);
     }
 
     private function pdf(int $bol_invitacion_id): array|string
@@ -721,7 +742,7 @@ class controlador_bol_invitacion extends system {
             return $this->errores->error(mensaje: 'Error al obtener boleto',data:  $bol_invitacion);
         }
 
-        $file = $this->inserta_qr(bol_invitacion_id:$this->registro_id);
+        $file = $this->inserta_qr(bol_invitacion_id:$bol_invitacion_id);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al obtener ruta_archivos_model',data:  $file);
         }
@@ -771,6 +792,7 @@ class controlador_bol_invitacion extends system {
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al obtener ruta',data:  $file_pdf);
         }
+
 
 
         $pdf->Output(dest: 'F',name: $file_pdf);
