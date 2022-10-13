@@ -746,8 +746,29 @@ class controlador_bol_invitacion extends system {
 
     private function name_pdf(stdClass $bol_invitacion): string
     {
-        $name = $bol_invitacion->bol_invitacion_plantel.'.'.
-            $bol_invitacion->bol_invitacion_licenciatura.'.'.$bol_invitacion->bol_invitacion_nombre_completo.'.pdf';
+
+        $bol_invitacion_plantel = $bol_invitacion->bol_invitacion_plantel;
+        $bol_invitacion_plantel = trim($bol_invitacion_plantel);
+        $bol_invitacion_plantel = str_replace('/','-',$bol_invitacion_plantel);
+        $bol_invitacion_plantel = str_replace('Ó','O',$bol_invitacion_plantel);
+        $bol_invitacion_plantel = str_replace('ó','o',$bol_invitacion_plantel);
+        $bol_invitacion_plantel = str_replace(',',' ',$bol_invitacion_plantel);
+
+        $bol_invitacion_licenciatura = $bol_invitacion->bol_invitacion_licenciatura;
+        $bol_invitacion_licenciatura = trim($bol_invitacion_licenciatura);
+        $bol_invitacion_licenciatura = str_replace('/','-',$bol_invitacion_licenciatura);
+        $bol_invitacion_licenciatura = str_replace('Ó','O',$bol_invitacion_licenciatura);
+        $bol_invitacion_licenciatura = str_replace('ó','o',$bol_invitacion_licenciatura);
+        $bol_invitacion_licenciatura = str_replace(',',' ',$bol_invitacion_licenciatura);
+
+        $bol_invitacion_nombre_completo = $bol_invitacion->bol_invitacion_nombre_completo;
+        $bol_invitacion_nombre_completo = trim($bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('/','-',$bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('Ó','O',$bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('ó','o',$bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace(',',' ',$bol_invitacion_nombre_completo);
+
+        $name = $bol_invitacion_plantel.'.'.$bol_invitacion_licenciatura.'.'.$bol_invitacion_nombre_completo.'.pdf';
         return str_replace('/', '-', $name);
     }
 
@@ -788,7 +809,7 @@ class controlador_bol_invitacion extends system {
 
         $pdf->SetXY(0,216);
         $pdf->SetFont(family: 'Times',size:  22);
-        $pdf->Multicell(w: 215, h: 10, txt: utf8_decode('Licenciatura: '.$bol_invitacion->bol_invitacion_licenciatura), align: 'C');
+        $pdf->Multicell(w: 215, h: 10, txt: utf8_decode($bol_invitacion->bol_invitacion_licenciatura), align: 'C');
 
         $pdf->SetXY(0,235);
         $pdf->SetFont(family: 'Times', style: 'B',size:  23);
