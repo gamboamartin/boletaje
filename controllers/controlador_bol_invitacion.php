@@ -807,6 +807,7 @@ class controlador_bol_invitacion extends system {
         $bol_invitacion_plantel = str_replace('  ', ' ', $bol_invitacion_plantel);
         $bol_invitacion_plantel = str_replace('  ', ' ', $bol_invitacion_plantel);
         $bol_invitacion_plantel = str_replace('  ', ' ', $bol_invitacion_plantel);
+        $bol_invitacion_plantel = str_replace('ñ', 'Ñ', $bol_invitacion_plantel);
         $bol_invitacion_plantel = strtoupper($bol_invitacion_plantel);
 
         $pdf->SetXY(0,188);
@@ -818,6 +819,7 @@ class controlador_bol_invitacion extends system {
         $bol_invitacion_licenciatura = str_replace('  ', ' ', $bol_invitacion_licenciatura);
         $bol_invitacion_licenciatura = str_replace('  ', ' ', $bol_invitacion_licenciatura);
         $bol_invitacion_licenciatura = strtoupper($bol_invitacion_licenciatura);
+        $bol_invitacion_licenciatura = str_replace('ñ', 'Ñ', $bol_invitacion_licenciatura);
 
         $pdf->SetXY(0,216);
         $pdf->SetFont(family: 'Times',size:  18);
@@ -830,6 +832,7 @@ class controlador_bol_invitacion extends system {
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = str_replace('  ', ' ', $bol_invitacion_nombre_completo);
+        $bol_invitacion_nombre_completo = str_replace('ñ', 'Ñ', $bol_invitacion_nombre_completo);
         $bol_invitacion_nombre_completo = strtoupper($bol_invitacion_nombre_completo);
 
         $pdf->Multicell(w: 215, h: 16, txt:utf8_decode($bol_invitacion_nombre_completo), align: 'C');
