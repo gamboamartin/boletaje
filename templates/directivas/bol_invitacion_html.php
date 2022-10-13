@@ -18,13 +18,8 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'am',place_holder: 'AM',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'am',place_holder:  'AM',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
@@ -39,17 +34,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'ap',place_holder: 'AP',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'ap',place_holder:  'AP',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -60,20 +49,23 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'domicilio',place_holder: 'Domicilio',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'domicilio',place_holder:  'Domicilio',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
+    /**
+     * Genera un input de tipo evento
+     * @param int $cols N col css
+     * @param stdClass $row_upd Registro en proceso
+     * @param bool $value_vacio si vacio no ingresa datos
+     * @param bool $disable si disable aplica atributo disabled
+     * @return array|string
+     * @version 0.40.2
+     */
     public function input_evento(int $cols, stdClass $row_upd, bool $value_vacio, bool $disable = false): array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
@@ -81,17 +73,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'evento',place_holder: 'Evento',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'evento',place_holder:  'Evento',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -102,17 +88,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'fecha_hora',place_holder: 'Fecha Hora',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'fecha_hora',place_holder:  'Fecha Hora',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -123,17 +103,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'generacion',place_holder: 'Generacion',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'generacion',place_holder:  'Generacion',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -144,17 +118,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'licenciatura',place_holder: 'Licenciatura',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'licenciatura',place_holder:  'Licenciatura',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -165,17 +133,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'n_boletos',place_holder: 'N Boletos',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'n_boletos',place_holder:  'N Boletos',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -186,17 +148,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'n_boletos_extra',place_holder: 'N Boletos Extra',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'n_boletos_extra',place_holder:  'N Boletos Extra',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -207,17 +163,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'n_ingresos',place_holder: 'N Ingresos',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'n_ingresos',place_holder:  'N Ingresos',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -228,17 +178,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'nombre',place_holder: 'Nombre',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'nombre',place_holder:  'Nombre',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -249,17 +193,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'nombre_completo',place_holder: 'Nombre Completo',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'nombre_completo',place_holder:  'Nombre Completo',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -270,17 +208,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'plantel',place_holder: 'Plantel',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'plantel',place_holder:  'Plantel',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -291,17 +223,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'por_ingresar',place_holder: 'Por ingresar',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'por_ingresar',place_holder:  'Por Ingresar',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
@@ -312,17 +238,11 @@ class bol_invitacion_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disable,name: 'resto',place_holder: 'Resto',
+        $div = $this->input_text_required(cols: $cols,disabled:  $disable,name:  'resto',place_holder:  'Resto',
             row_upd: $row_upd, value_vacio: $value_vacio);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
-
-        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
-
         return $div;
     }
 
