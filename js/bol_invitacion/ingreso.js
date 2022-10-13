@@ -20,7 +20,7 @@ function docReady(fn) {
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
     var lastResult, countResults = 0;
-    var url = getAbsolutePath();
+    let url = getAbsolutePath();
     function onScanSuccess(decodedText, decodedResult) {
         if (decodedText !== lastResult) {
             ++countResults;
@@ -44,6 +44,8 @@ docReady(function () {
 });
 
 bol_invitacion_id_sl.change(function() {
+    let url = getAbsolutePath();
+
     let registro_id = bol_invitacion_id_sl.val();
     window.location.href = url+'index.php?seccion=bol_invitacion&accion=get_invitacion&registro_id='+registro_id+'&session_id='+session_id;
 });
