@@ -39,7 +39,7 @@ class controlador_bol_invitacion extends system {
                                 stdClass $paths_conf = new stdClass()){
         $modelo = new bol_invitacion(link: $link);
         $html = new bol_invitacion_html($html);
-        $obj_link = new links_menu($this->registro_id);
+        $obj_link = new links_menu(link: $link, registro_id: $this->registro_id);
         parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
         $this->titulo_lista = 'Invitacion';
@@ -161,7 +161,7 @@ class controlador_bol_invitacion extends system {
             return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
         }
 
-        $link = $this->obj_link->link_con_id(accion: $accion,registro_id:  $row->bol_invitacion_id,
+        $link = $this->obj_link->link_con_id(accion: $accion, link: $this->link, registro_id:  $row->bol_invitacion_id,
             seccion:  $this->tabla);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al genera link',data:  $link);
@@ -530,8 +530,8 @@ class controlador_bol_invitacion extends system {
         $this->inputs->resto = $in_resto;
         $this->inputs->por_ingresar = $in_por_ingresar;
 
-        $link_bol_invitacion_modifica_bd = (new links_menu(registro_id: $this->registro_id))->link_con_id(
-            accion:'modifica_bd',registro_id:  $this->registro_id,seccion:  $this->tabla);
+        $link_bol_invitacion_modifica_bd = (new links_menu(link: $this->link, registro_id: $this->registro_id))->link_con_id(
+            accion:'modifica_bd',link: $this->link,registro_id:  $this->registro_id,seccion:  $this->tabla);
 
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al generar link',
@@ -711,8 +711,8 @@ class controlador_bol_invitacion extends system {
         $this->inputs->nombre_completo = $in_nombre_completo;
         $this->inputs->plantel = $in_plantel;
 
-        $link_bol_invitacion_modifica_bd = (new links_menu(registro_id: $this->registro_id))->link_con_id(
-            accion:'modifica_bd',registro_id:  $this->registro_id,seccion:  $this->tabla);
+        $link_bol_invitacion_modifica_bd = (new links_menu(link: $this->link, registro_id: $this->registro_id))->link_con_id(
+            accion:'modifica_bd', link: $this->link, registro_id:  $this->registro_id,seccion:  $this->tabla);
 
         if(errores::$error){
             return $this->retorno_error(mensaje: 'Error al generar link',
